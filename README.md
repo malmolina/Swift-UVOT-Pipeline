@@ -2,12 +2,12 @@ Swift UVOT Pipeline Patch
 ----------
 This patch uses the `uvot_deep.py code` created by Lea Hagen (forked here). There are two major updates:
 
-1) Fixes any minor bugs in `uvot_deep.py` (see `uvot_deep_mm.py`) as described below, and
-2) Creates a pipeline so that this program can automatically be used for multiple objects using downloaded HEASARC data (either by a tarred file or the observation directories)
+1) Fixes minor bugs in `uvot_deep.py` (see `uvot_deep_mm.py`) as described below, and
+2) Creates a pipeline to automatically create mosaics of calibrated UVOT images for multiple objects using downloaded HEASARC data.
 
 `uvot_deep_mm.py` Update
 ----------
-This code is basically the same as the `uvot_deep.py` code created by Lea Hagen, with three major changes: 
+This code is basically the same as the `uvot_deep.py` code created by Lea Hagen, with three minor changes: 
 
 1) Windowed frames are no longer included in the uvotimsum command (which caused fatal errors in uvot_deep)
 2) If the large scale structure correction map (LSS image) is misaligned, the program now aligns the image to the sky (counts) image to allow the program to continue to run smoothly
@@ -15,7 +15,7 @@ This code is basically the same as the `uvot_deep.py` code created by Lea Hagen,
 
 This allows for a smooth run of uvot_deep over multiple objects, regardless of data types or any issues with the LSS images.
 
-In order to run this patch, uvot_deep must be appropriately set up (Including the HEASEARC FTOOLS and CALDB). As a consequence, the original instructions are attached at the end.
+In order to run this patch, uvot_deep must be appropriately set up (Including the HEASEARC FTOOLS and CALDB). As a consequence, the original instructions are attached at the end. Additionally, the package `reproject` is required. This is a program that can be installed using `pip` in python3. 
 
 Required packages: astropy, reproject
 
@@ -23,11 +23,11 @@ Python 3 is required.
 
 Swift UVOT Pipeline Code
 ----------
-This program uses uvot_deep.py created by Lea Hagen (and modeled off of Michael Siegel's code uvot_deep.pro) to create an automated pipeline creating mosaics of calibrated UVOT images for multiple observations. The data must NOT be windowed and must be 2x2 binned in order to be included in the mosaic. Additional details can be found on the uvot_deep.py documentation (see below). This code uses uvot_deep_mm.py which requires an additional python package`reproject.py`. Installation directions are given on their website, but it can be installed using `pip`.
+This program uses an updated version of `uvot_deep.py` written by Lea Hagen (and modeled off of Michael Siegel's code `uvot_deep.pro`) to create an automated pipeline creating mosaics of calibrated UVOT images for multiple observations. The data must NOT be windowed and must be 2x2 binned in order to be included in the mosaic. Additional details can be found in the General UVOT-Mosaic documentation (see below). This code uses `uvot_deep_mm.py` which requires an additional python package`reproject`. Installation directions are given on their website, but it can be installed using `pip`.
 
 This program requires an input file. The format of the input file is as follows:
-Line 1: directory that holds uvot_deep_mm.y and config_uvot_mosaic.py
-Line 2: "All" or "None" - If "All", the individual frame filess will be saved. If "None", 
+Line 1: directory that holds `uvot_deep_mm.y` and `config_uvot_mosaic.py`
+Line 2: "All" or "None" - If "All", the individual frame files will be saved. If "None", 
 all individual frame files will be deleted
 Lines 3 onwards: three column files with the directory to observations, prefix, and filters
 Example:
@@ -46,11 +46,18 @@ When running this code use `ipython` to initiate script in terminal using a pyth
 > ipython swift_uvot_pipeline.py
 Enter Full path to input file: 
 ```
-After you input the full path to the input file (such as `/Users/userid/input_files/input.dat`), the code will complete the data reduction automatically and keep the individual frames if requested.
+After you input the full path to the input file (such as `/Users/userid/input_files/input.dat`), the code will complete the data reduction automatically and keep the individual frames if requested. NOTE: Untarring or unzipping files is NO LONGER NECESSARY with this program. The only required steps are downloading the UVOT and Swift Auxiliary data from HEASARC (<https://heasarc.gsfc.nasa.gov/cgi-bin/W3Browse/swift.pl>)in whatever format is most convenient (tarred file or by using a script), creating the input file, and running `swift_uvot_pipeline.py`.
 
-As this pipeline is under active development, if you would like more features added please contact @malmolina.
 
-----------------------
+If the individual frames are kept, the tar file is also currently saved. If none of the individual frames are kept, the tar file holding the original download is deleted. 
+
+Current Updates (Under Construction)
+----------
+Current plans for updating this pipeline include creating more options for saving and deleting image frames, storing output files in a requested architecture by the user, and automatically downloading data from scripts stored from HEASARC.
+
+If you would like other features not mentioned here, please contact @malmolina.
+
+-------------------------
 -------------------------
 
 UVOT MOSAIC General Instructions
