@@ -61,7 +61,7 @@ Current plans for updating this pipeline include:
 1) Creating more options for saving and deleting image frames
 2) Storing output files in a requested architecture by the user
 3) Automatically downloading data from scripts stored from HEASARC
-4) Updating header of all files with zer pionts and flux conversion factors
+4) Updating header of all files with zero pionts and flux conversion factors
 5) Updating header with central wavelength/frequency of filters
 6) Adding option to apply dead-time correction
 7) Calculating time degredation for individual frames and updating header with information
