@@ -46,7 +46,7 @@ When running this code use `ipython` to initiate script in terminal using a pyth
 > ipython swift_uvot_pipeline.py
 Enter Full path to input file: 
 ```
-After you input the full path to the input file (such as `/Users/userid/input_files/input.dat`), the code will complete the data reduction automatically and keep the individual frames if requested. NOTE: Untarring or unzipping files is NO LONGER NECESSARY with this program. The only required steps are downloading the UVOT and Swift Auxiliary data from HEASARC (<https://heasarc.gsfc.nasa.gov/cgi-bin/W3Browse/swift.pl>)in whatever format is most convenient (tarred file or by using a script), creating the input file, and running `swift_uvot_pipeline.py`.
+After you input the full path to the input file (such as `/Users/userid/input_files/input.dat`), the code will complete the data reduction automatically and keep the individual frames if requested. NOTE: Untarring or unzipping files is NO LONGER NECESSARY with this program. The only required steps are downloading the UVOT and Swift Auxiliary data from HEASARC (<https://heasarc.gsfc.nasa.gov/cgi-bin/W3Browse/swift.pl>) in whatever format is most convenient (tarred file or by using a script), creating the input file, and running `swift_uvot_pipeline.py`.
 
 
 If the individual frames are kept, the tar file is also currently saved. If none of the individual frames are kept, the tar file holding the original download is deleted. 
