@@ -26,9 +26,12 @@ Swift UVOT Pipeline Code
 This program uses an updated version of `uvot_deep.py` written by Lea Hagen (and modeled off of Michael Siegel's code `uvot_deep.pro`) to create an automated pipeline creating mosaics of calibrated UVOT images for multiple observations. The data must NOT be windowed and must be 2x2 binned in order to be included in the mosaic. Additional details can be found in the General UVOT-Mosaic documentation (see below). This code uses `uvot_deep_mm.py` which requires an additional python package`reproject`. Installation directions are given on their website, but it can be installed using `pip`.
 
 This program requires an input file. The format of the input file is as follows:
+
 Line 1: directory that holds `uvot_deep_mm.y` and `config_uvot_mosaic.py`
+
 Line 2: "All" or "None" - If "All", the individual frame files will be saved. If "None", 
 all individual frame files will be deleted
+
 Lines 3 onwards: three column files with the directory to observations, prefix, and filters
 Example:
 ```
