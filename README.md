@@ -38,13 +38,14 @@ None
 /Users/userid/data/obj3   obj3_    [w1,w2,m2]
 /Users/userid/data/obj4   obj4_    [w1,w2,m2]
 ```
-
+Running the Swift UVOT Pipeline
+----------
 When running this code use `ipython` to initiate script in terminal using a python3 environment:
 ```
 > ipython swift_uvot_pipeline.py
 Enter Full path to input file: 
 ```
-After you input the filename, the code will complete the data reduction automatically and keep the individual frames if requested.
+After you input the full path to the input file (such as `/Users/userid/input_files/input.dat`), the code will complete the data reduction automatically and keep the individual frames if requested.
 
 As this pipeline is under active development, if you would like more features added please contact @malmolina.
 
