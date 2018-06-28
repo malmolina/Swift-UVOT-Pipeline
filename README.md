@@ -1,3 +1,5 @@
+UVOT MOSAIC General Instructions
+----------
 This code creates a calibrated mosaic from the individual UVOT snapshots downloaded from the archive.
 
 The code and documentation are in active development.  Please consult @lea-hagen before using this.
