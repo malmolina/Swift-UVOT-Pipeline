@@ -1,19 +1,19 @@
 Swift UVOT Pipeline Patch
 ----------
-This patch uses the uvot_deep.py code created by Lea Hagen (forked here). There are two major updates:
+This patch uses the `uvot_deep.py code` created by Lea Hagen (forked here). There are two major updates:
 
-1) Fixes any minor bugs in uvot_deep.py (see uvot_deep_mm.py) as described below, and
+1) Fixes any minor bugs in `uvot_deep.py` (see `uvot_deep_mm.py`) as described below, and
 2) Creates a pipeline so that this program can automatically be used for multiple objects using downloaded HEASARC data (either by a tarred file or the observation directories)
 
 `uvot_deep_mm.py` Update
 ----------
-This code is basically the same as the uvot_deep.py code created by Lea Hagen, with three major changes: 
+This code is basically the same as the `uvot_deep.py` code created by Lea Hagen, with three major changes: 
 
 1) Windowed frames are no longer included in the uvotimsum command (which caused fatal errors in uvot_deep)
 2) If the large scale structure correction map (LSS image) is misaligned, the program now aligns the image to the sky (counts) image to allow the program to continue to run smoothly
-3) If ALL frames in a given filter are windowed frames, the code logs the information in swift_uvot.log, which is in the directory that holds the original uvot_deep_mm.py copy. The final images for that filter are not made, and any empty files associated with that filter are deleted.
+3) If ALL frames in a given filter are windowed frames, the code logs the information in swift_uvot.log, which is in the directory that holds the original `uvot_deep_mm.py` copy. The final images for that filter are not made, and any empty files associated with that filter are deleted.
 
-This allows for a smooth run of uvot_deep.py over multiple objects, regardless of data types or any issues with the LSS images.
+This allows for a smooth run of uvot_deep over multiple objects, regardless of data types or any issues with the LSS images.
 
 
 Required packages: astropy, reproject
@@ -22,7 +22,7 @@ Python 3 is required.
 
 Swift UVOT Pipeline Code
 ----------
-This program uses uvot_deep.py created by Lea Hagen (and modeled off of Michael Siegel's code uvot_deep.pro) to create an automated pipeline creating mosaics of calibrated UVOT images for multiple observations. The data must NOT be windowed and must be 2x2 binned in order to be included in the mosaic. Additional details can be found on the uvot_deep.py documentation (see below). This code uses uvot_deep_mm.py which requires an additional python package reproject.py. Installation directions are given on their website, but it can be installed using pip.
+This program uses uvot_deep.py created by Lea Hagen (and modeled off of Michael Siegel's code uvot_deep.pro) to create an automated pipeline creating mosaics of calibrated UVOT images for multiple observations. The data must NOT be windowed and must be 2x2 binned in order to be included in the mosaic. Additional details can be found on the uvot_deep.py documentation (see below). This code uses uvot_deep_mm.py which requires an additional python package`1reproject.py`. Installation directions are given on their website, but it can be installed using `pip`.
 
 This program requires an input file. The format of the input file is as follows:
 Line 1: directory that holds uvot_deep_mm.y and config_uvot_mosaic.py
