@@ -15,6 +15,7 @@ This code is basically the same as the `uvot_deep.py` code created by Lea Hagen,
 
 This allows for a smooth run of uvot_deep over multiple objects, regardless of data types or any issues with the LSS images.
 
+In order to run this patch, uvot_deep must be appropriately set up (Including the HEASEARC FTOOLS and CALDB). As a consequence, the original instructions are attached at the end.
 
 Required packages: astropy, reproject
 
@@ -48,6 +49,9 @@ Enter Full path to input file:
 After you input the full path to the input file (such as `/Users/userid/input_files/input.dat`), the code will complete the data reduction automatically and keep the individual frames if requested.
 
 As this pipeline is under active development, if you would like more features added please contact @malmolina.
+
+----------------------
+-------------------------
 
 UVOT MOSAIC General Instructions
 ----------
