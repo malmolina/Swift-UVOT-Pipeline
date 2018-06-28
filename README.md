@@ -1,3 +1,12 @@
+UVOT Pipeline Patch
+----------
+This patch uses the uvot_deep.py code created by Lea Hagen (forked here). There are two major updates:
+
+1) Fixes any minor bugs in uvot_deep.py (see uvot_deep_mm.py) as described below, and
+2) Creates a pipeline so that this program can automatically be used for multiple objects using downloaded HEASARC data (either by a tarred file or the observation directories)
+
+
+
 UVOT MOSAIC General Instructions
 ----------
 This code creates a calibrated mosaic from the individual UVOT snapshots downloaded from the archive.
