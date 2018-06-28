@@ -5,6 +5,20 @@ This patch uses the uvot_deep.py code created by Lea Hagen (forked here). There 
 1) Fixes any minor bugs in uvot_deep.py (see uvot_deep_mm.py) as described below, and
 2) Creates a pipeline so that this program can automatically be used for multiple objects using downloaded HEASARC data (either by a tarred file or the observation directories)
 
+uvot_deep_mm.py Update
+----------
+This code is basically the same as the uvot_deep.py code created by Lea Hagen, with three major changes: 
+
+1) Windowed frames are no longer included in the uvotimsum command (which caused fatal errors in uvot_deep)
+2) If the large scale structure correction map (LSS image) is misaligned, the program now aligns the image to the sky (counts) image to allow the program to continue to run smoothly
+3) If ALL frames are windowed frames, the code logs the information in swift_uvot.log, which is in the directory that holds the original uvot_deep_mm.py copy 
+
+This allows for a smooth run of uvot_deep.py over multiple objects, regardless of data types or any issues with the LSS images.
+
+
+Required packages: astropy, reproject
+
+Python 3 is required.
 
 
 UVOT MOSAIC General Instructions
