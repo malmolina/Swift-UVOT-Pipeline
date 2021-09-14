@@ -5,17 +5,21 @@ This patch uses the `uvot_deep.py code` created by Lea Hagen (forked here). Ther
 1) Fixes minor bugs in `uvot_deep.py` (see `uvot_deep_mm.py`) as described below, and
 2) Creates a pipeline to automatically create mosaics of calibrated UVOT images for multiple objects using downloaded HEASARC data.
 
-`uvot_deep_mm.py` Update
+`uvot_deep_mm.py` Update (September 2021)
 ----------
-This code is basically the same as the `uvot_deep.py` code created by Lea Hagen, with three minor changes: 
+This code is an updated version of the `uvot_deep.py` code created by Lea Hagen. The changes are listed below: 
 
 1) Windowed frames are no longer included in the uvotimsum command (which caused fatal errors in uvot_deep)
 2) If the large scale structure correction map (LSS image) is misaligned, the program now aligns the image to the sky (counts) image to allow the program to continue to run smoothly
 3) If ALL frames in a given filter are windowed frames, the code logs the information in swift_uvot.log, which is in the directory that holds the original `uvot_deep_mm.py` copy. The final images for that filter are not made, and any empty files associated with that filter are deleted.
+4) If a uat file cannot be created, the observation is skipped and the action is recorded in swift_uvot.log.
+5) The time-dependent throughput loss is corrected for each frame before stacking.
+6) The dead-time correction is applied to each frame before stacking.
+7) 1x1 binned images are re-binned to 2x2 binning so they can be included in the final mosaic.
 
 This allows for a smooth run of uvot_deep over multiple objects, regardless of data types or any issues with the LSS images.
 
-In order to run this patch, uvot_deep must be appropriately set up (Including the HEASEARC FTOOLS and CALDB). As a consequence, the original instructions are attached at the end. Additionally, the package `reproject` is required. This is a program that can be installed using `pip` in python3. 
+In order to run this patch, uvot_deep must be appropriately set up (Including the HEASEARC FTOOLS and CALDB). Note that only the pre-compiled binary version is needed to run `swift_uvot_pipeline.py`. As a consequence, the original instructions are attached at the end. Additionally, the package `reproject` is required. This is a program that can be installed using `pip` in python3. 
 
 Required packages: astropy, reproject
 
@@ -23,11 +27,11 @@ Python 3 is required.
 
 Swift UVOT Pipeline Code
 ----------
-This program uses an updated version of `uvot_deep.py` written by Lea Hagen (and modeled off of Michael Siegel's code `uvot_deep.pro`) to create an automated pipeline creating mosaics of calibrated UVOT images for multiple observations. The data must NOT be windowed and must be 2x2 binned in order to be included in the mosaic. Additional details can be found in the General UVOT-Mosaic documentation (see below). This code uses `uvot_deep_mm.py` which requires an additional python package`reproject`. Installation directions are given on their website, but it can be installed using `pip`.
+This program uses an updated version of `uvot_deep.py` written by Lea Hagen (and modeled off of Michael Siegel's code `uvot_deep.pro`) to create an automated pipeline creating mosaics of calibrated UVOT images for multiple observations. Additional details can be found in the General UVOT-Mosaic documentation (see below). This code uses `uvot_deep_mm.py` which requires an additional python package`reproject`. Installation directions are given on their website, but it can be installed using `pip`.
 
 This program requires an input file. The format of the input file is as follows:
 
-Line 1: directory that holds `uvot_deep_mm.y` and `config_uvot_mosaic.py`
+Line 1: directory that holds `uvot_deep_mm.y`, `config_uvot_mosaic.py` and `swusenscorr20041120v006.fits'
 
 Line 2: "All" or "None" - If "All", the individual frame files will be saved. If "None", 
 all individual frame files will be deleted
@@ -44,9 +48,9 @@ None
 ```
 Running the Swift UVOT Pipeline
 ----------
-When running this code use `ipython` to initiate script in terminal using a python3 environment:
+When running this code use `python` to initiate script in terminal using a python3 environment:
 ```
-> ipython swift_uvot_pipeline.py
+> python swift_uvot_pipeline.py
 Enter Full path to input file: 
 ```
 After you input the full path to the input file (such as `/Users/userid/input_files/input.dat`), the code will complete the data reduction automatically and keep the individual frames if requested. NOTE: Untarring or unzipping files is NO LONGER NECESSARY with this program. The only required steps are downloading the UVOT and Swift Auxiliary data from HEASARC (<https://heasarc.gsfc.nasa.gov/cgi-bin/W3Browse/swift.pl>) in whatever format is most convenient (tarred file or by using a script), creating the input file, and running `swift_uvot_pipeline.py`.
@@ -54,20 +58,10 @@ After you input the full path to the input file (such as `/Users/userid/input_fi
 
 If the individual frames are kept, the tar file is also currently saved. If none of the individual frames are kept, the tar file holding the original download is deleted. 
 
-Current Updates (Under Construction)
+Citing the Swift UVOT Pipeline
 ----------
-Current plans for updating this pipeline include:
 
-1) Creating more options for saving and deleting image frames
-2) Storing output files in a requested architecture by the user
-3) Automatically downloading data from scripts stored from HEASARC
-4) Updating header of all files with zero pionts and flux conversion factors
-5) Updating header with central wavelength/frequency of filters
-6) Adding option to apply dead-time correction
-7) Calculating time degredation for individual frames and updating header with information
-8) Adding interactive option with the ability to inspect final images
-
-If you would like other features not mentioned here, please contact @malmolina.
+If you would like to use this pipeline, please cite the paper Molina et al. (2020b) where the pipeline was first introduced (https://ui.adsabs.harvard.edu/abs/2020ApJS..251...11M/abstract)
 
 -------------------------
 -------------------------
