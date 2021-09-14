@@ -22,12 +22,18 @@ None
 /Users/userid/data/obj3   obj3_    [w1,w2,m2]
 /Users/userid/data/obj4   obj4_    [w1,w2,m2]
 
-When running this code use ipython in python3 environment:
-> ipython swift_uvot_pipeline.py
+Use Python 3 to run this Code via the command line:
+> python swift_uvot_pipeline.py
 
 The code will then ask for the full path to the input file. After you input the filename, 
 the code will complete the data reduction automatically and keep the requested files.
 """
+"""
+VERSION 2.0      Created by: Mallory Molina    September 2021
+Updates:
+1) Now requires 2020 TDTL calibration file
+"""
+
 ###########################################################################################
 import os
 import glob
@@ -102,6 +108,7 @@ for i in range(0,len(obs_info['directories'])):
 	os.chdir(drct)
 	copy2(uvot_dir+'uvot_deep_mm.py',drct+'uvot_deep_mm.py')
 	copy2(uvot_dir+'config_uvot_mosaic.py',drct+'config_uvot_mosaic.py')
+	copy2(uvot_dir+'swusenscorr20041120v006.fits',drct+'swusenscorr20041120v006.fits')
 	#untar and/or unzip UVOT HEASARC files
 	tfle=glob.glob('*.tar')
 	if len(tfle) > 0:
@@ -136,6 +143,7 @@ for i in range(0,len(obs_info['directories'])):
 	os.system('rm -rf __pycache__/')
 	os.remove(drct+'config_uvot_mosaic.py')
 	os.remove(drct+'uvot_deep_mm.py')
+	os.remove(drct+'swusenscorr20041120v006.fits')
 
 
 
