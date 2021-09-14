@@ -27,7 +27,7 @@ This code is an updated version of the `uvot_deep.py` code created by Lea Hagen.
 
 This allows for a smooth run of uvot_deep over multiple objects, regardless of data types or any issues with the LSS images.
 
-In order to run this patch, uvot_deep must be appropriately set up (Including the HEASEARC FTOOLS and CALDB). Note that only the pre-compiled binary version is needed to run `swift_uvot_pipeline.py`. As a consequence, the original instructions are attached at the end. Additionally, the package `reproject` is required. This is a program that can be installed using `pip` in python3. 
+In order to run this patch, uvot_deep must be appropriately set up (Including the HEASEARC FTOOLS and CALDB). Note that only the pre-compiled binary version is needed to run `swift_uvot_pipeline.py`. As a consequence, the original instructions are attached at the end. Additionally, the package `reproject` is required. This is a package that can be installed using `pip` in python3. 
 
 Required packages: astropy, reproject
 
@@ -65,6 +65,28 @@ After you input the full path to the input file (such as `/Users/userid/input_fi
 
 
 If the individual frames are kept, the tar file is also currently saved. If none of the individual frames are kept, the tar file holding the original download is deleted. 
+
+Products of the Swift UVOT Pipeline
+----------
+
+The pipeline will create the following files: 
+
+- `*_sk_all.fits`: each extension is a counts ("sky") image, in units of counts per pixel
+- `*_sk.fits`: all extensions from `*_sk.fits` added together
+- `*_ex_all.fits`: each extension is an exposure map, in units of seconds
+- `*_ex.fits`: all extensions from `*_ex.fits` added together
+- `*_cr.fits`: count rate image (`*_sk.fits` divided by `*_ex.fits`), in counts per second per pixel
+- swift_uvot.log: A log file containing information on the objects not processed and observations excluded 
+
+The code does not convert to magnitude or flux values. The AB magnitude system Zero points and flux conversions are found here: https://heasarc.gsfc.nasa.gov/docs/heasarc/caldb/swift/docs/uvot/uvot_caldb_AB_10wa.pdf
+
+To convert from count rate (cr) to AB magnitude (m_AB), with the zero point ZP from the documentation, use the following equation:
+
+`m_AB = ZP - 2.5*LOG10(cr)`
+
+Similarly to convert from count rate (cr) to flux (f) using the conversion factor (C) from the documenation, use the following equation:
+
+`f = C * cr`
 
 Citing the Swift UVOT Pipeline
 ----------
