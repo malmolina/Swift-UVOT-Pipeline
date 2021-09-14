@@ -5,6 +5,14 @@ This patch uses the `uvot_deep.py code` created by Lea Hagen (forked here). Ther
 1) Fixes minor bugs in `uvot_deep.py` (see `uvot_deep_mm.py`) as described below, and
 2) Creates a pipeline to automatically create mosaics of calibrated UVOT images for multiple objects using downloaded HEASARC data.
 
+Files needed to run Swift UVOT Pipeline Patch
+----------
+
+1) `swift_uvot_pipeline.py`
+2) `uvot_deep_mm.py`
+3) `swusenscorr20041120v006.fits`
+4) `config_uvot_mosaic.py`
+
 `uvot_deep_mm.py` Update (September 2021)
 ----------
 This code is an updated version of the `uvot_deep.py` code created by Lea Hagen. The changes are listed below: 
