@@ -73,6 +73,7 @@ The pipeline will create the following files:
 
 - `*_sk_all.fits`: each extension is a counts ("sky") image, in units of counts per pixel
 - `*_sk.fits`: all extensions from `*_sk.fits` added together
+- `*_sk_err.fits` : error image of `*_sk.fits` file, or the square root of the total counts image
 - `*_ex_all.fits`: each extension is an exposure map, in units of seconds
 - `*_ex.fits`: all extensions from `*_ex.fits` added together
 - `*_cr.fits`: count rate image (`*_sk.fits` divided by `*_ex.fits`), in counts per second per pixel
