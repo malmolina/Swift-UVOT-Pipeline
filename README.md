@@ -24,6 +24,7 @@ This code is an updated version of the `uvot_deep.py` code created by Lea Hagen.
 5) The time-dependent throughput loss is corrected for each frame before stacking.
 6) The dead-time correction is applied to each frame before stacking.
 7) 1x1 binned images are re-binned to 2x2 binning so they can be included in the final mosaic.
+8) A counts error image is created
 
 This allows for a smooth run of uvot_deep over multiple objects, regardless of data types or any issues with the LSS images.
 
