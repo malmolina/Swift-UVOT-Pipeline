@@ -147,6 +147,7 @@ def uvot_deep(main_dir,obs_dir, input_folders,output_prefix,filter_list=['w2','m
         hdu_sk_all = fits.HDUList()
         hdu_ex_all = fits.HDUList()
         hdu_sl_all = fits.HDUList()
+        err_hdu    = fits.HDUList()
         
         for obs in obs_list:
 
