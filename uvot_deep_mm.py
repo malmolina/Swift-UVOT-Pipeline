@@ -221,6 +221,7 @@ def uvot_deep(main_dir,obs_dir, input_folders,output_prefix,filter_list=['w2','m
 
             hdu_sk_all= append_ext(hdu_sk_all, image_info['sk_image_corr'][-1], image_info)
             hdu_ex_all = append_ext(hdu_ex_all, image_info['exp_image_mask'][-1], image_info)
+            hdu_er_all = append_ext(hdu_sk_all, image_info['sk_image_corr'][-1], image_info)
             if scattered_light:
                 hdu_sl_all= append_ext(hdu_sl_all, image_info['sl_image'][-1], image_info)
                     
@@ -274,6 +275,15 @@ def uvot_deep(main_dir,obs_dir, input_folders,output_prefix,filter_list=['w2','m
             with fits.open(output_prefix + filt + '_sk.fits') as hdu_sk, fits.open(output_prefix + filt + '_ex.fits') as hdu_ex:
                 cr_hdu = fits.PrimaryHDU(data=hdu_sk[1].data/hdu_ex[1].data, header=hdu_sk[1].header)
                 cr_hdu.writeto(output_prefix + filt + '_cr.fits', overwrite=True)
+
+        #make an error image too
+        if os.path.isfile(output_prefix + filt + '_sk.fits'):
+            #If all data was not windowed, proceed as planned
+            with fits.open(output_prefix + filt + '_sk.fits') as hdu_sk:
+                err_hdu = fits.PrimaryHDU(header=hdu_sk[0].header)
+                err_hdu.append(fits.ImageHDU(data=hdu_sk[1].data, header=hdu_sk[1].header))
+                err_hdu.writeto(output_prefix + filt + '_sk_err.fits', overwrite=True)
+
         else:
             #Otherwise, delete blank fits files, and record note in log file
             filename = 'swift_uvot.log'
