@@ -281,7 +281,7 @@ def uvot_deep(main_dir,obs_dir, input_folders,output_prefix,filter_list=['w2','m
         if os.path.isfile(output_prefix + filt + '_sk.fits'):
             #If all data was not windowed, proceed as planned
             with fits.open(output_prefix + filt + '_sk.fits') as hdu_sk:
-                err_hdu = fits.PrimaryHDU(header=hdu_sk[0].header)
+                err_hdu.append(fits.PrimaryHDU(header=hdu_sk[0].header))
                 err_hdu.append(fits.ImageHDU(data=np.sqrt(hdu_sk[1].data), header=hdu_sk[1].header))
                 err_hdu.writeto(output_prefix + filt + '_sk_err.fits', overwrite=True)
 
