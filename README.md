@@ -93,7 +93,7 @@ Similarly to convert from count rate (cr) to flux (f) using the conversion facto
 Citing the Swift UVOT Pipeline
 ----------
 
-If you use the Swift-UVOT-Pipeline, please use the reference for the most up-to-date version of the code which was presented in Molina et al. (2023) (arxiv link coming).
+If you use the Swift-UVOT-Pipeline, please use the reference for the most up-to-date version of the code which was presented in Molina et al. (2023) (https://arxiv.org/abs/2308.15551).
 
 The code was first introduced in Molina et al. (2020b) (https://ui.adsabs.harvard.edu/abs/2020ApJS..251...11M/abstract).
 
