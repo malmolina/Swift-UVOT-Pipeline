@@ -23,6 +23,14 @@ Updates:
 5) log now stores observations that are skipped because they are not aspect corrected
 6) observations without uat files (no star tracker) are skipped and stored in log
 """
+"""
+VERSION 3.0      Created by: Mallory Molina    February 2024
+Fixes the following bugs:
+1) Counts-images were being double-counted
+2) Time-dependent throughput loss correction calculation was incorrectly indexed resulting in over-corrections
+3) Dead-time and time-dependent throughput loss corrections were being applied to both the exposure and counts maps
+4) Rebinning of exposure images were not correctly calculated
+"""
 ###########################################################################################
 
 
@@ -132,8 +140,7 @@ def uvot_deep(main_dir,obs_dir, input_folders,output_prefix,filter_list=['w2','m
 
         # get the images that have observations in that filter
         obs_list = [im for im in filter_exist.keys() if filt in filter_exist[im]]
-
-        # check that images exist
+       # check that images exist
         if len(obs_list) == 0:
             print('No images found for filter: ' + filt)
             continue
@@ -220,11 +227,10 @@ def uvot_deep(main_dir,obs_dir, input_folders,output_prefix,filter_list=['w2','m
                     
             # --- 3. make one file with ALL OF THE EXTENSIONS
 
-            hdu_sk_all= append_ext(hdu_sk_all, image_info['sk_image_corr'][-1], image_info)
-            hdu_ex_all = append_ext(hdu_ex_all, image_info['exp_image_mask'][-1], image_info)
-            hdu_er_all = append_ext(hdu_sk_all, image_info['sk_image_corr'][-1], image_info)
+            hdu_sk_all= append_ext(hdu_sk_all, image_info['sk_image_corr'][-1], image_info,'cts')
+            hdu_ex_all = append_ext(hdu_ex_all, image_info['exp_image_mask'][-1], image_info,'exp')
             if scattered_light:
-                hdu_sl_all= append_ext(hdu_sl_all, image_info['sl_image'][-1], image_info)
+                hdu_sl_all= append_ext(hdu_sl_all, image_info['sl_image'][-1], image_info,'slgt')
                     
 
         #Write out skipped observations to log (frame time not 0.0110322s or not aspect-corrected)
@@ -262,12 +268,12 @@ def uvot_deep(main_dir,obs_dir, input_folders,output_prefix,filter_list=['w2','m
 
         # counts image
         cmd = 'uvotimsum ' + output_prefix + filt + '_sk_all.fits ' + \
-              output_prefix + filt + '_sk.fits exclude=none clobber=yes'
+              output_prefix + filt + '_sk.fits exclude=none clobber=yes pixsize=0'
         subprocess.run(cmd, shell=True)
 
         # exposure map
         cmd = 'uvotimsum ' + output_prefix + filt + '_ex_all.fits ' + \
-              output_prefix + filt + '_ex.fits method=EXPMAP exclude=none clobber=yes'
+              output_prefix + filt + '_ex.fits method=EXPMAP exclude=none clobber=yes pixsize=0'
         subprocess.run(cmd, shell=True)
 
         # make a count rate image too
@@ -299,7 +305,7 @@ def uvot_deep(main_dir,obs_dir, input_folders,output_prefix,filter_list=['w2','m
             os.remove(obs_dir+output_prefix + filt + '_ex_all.fits')
 
 
-def append_ext(hdu_all, new_fits_file, image_info):
+def append_ext(hdu_all, new_fits_file, image_info,ctest):
     """
     append extenstions from new_fits_file to hdu_all (checking that the new
     extensions have an aspect correction and are 2x2 binned) after correcting for sensitivity loss.
@@ -336,13 +342,14 @@ def append_ext(hdu_all, new_fits_file, image_info):
                 (image_info['frame_time'][dict_ind] == 0.0110322):
                     #Rebin Data if necessary
                     if image_info['binning'][dict_ind] == 1:
-                        hdu_new[i].data,hdu_new[i].header=rebin(hdu_new[i].data,hdu_new[i].header)
-
-                    # Correct for Degradation of Detector
-                    hdu_new[i].data = tdtl_corr(str(hdu_new[i].header['DATE-OBS']),hdu_new[i].data,filt)
+                        hdu_new[i].data,hdu_new[i].header=rebin(hdu_new[i].data,hdu_new[i].header,ctest)
+                    #Correct for Degradation of Detector
+                    if ctest == 'cts':
+                        hdu_new[i].data = tdtl_corr(str(hdu_new[i].header['DATE-OBS']),hdu_new[i].data,filt)
 
                     #Correct for Read-Out (Dead) Time for full-frame observations
-                    hdu_new[i].data = hdu_new[i].data*1.016
+                    if ctest == 'exp':   
+                       hdu_new[i].data = hdu_new[i].data*0.984227987164845
 
                     #Append Corrected File
                     hdu_all.append(fits.ImageHDU(data=hdu_new[i].data, header=hdu_new[i].header))
@@ -462,7 +469,6 @@ def mask_image(obs_folder, obs_filter, teldef_file):
     bad_pix = obs_folder+'/uvot/image/sw'+obs_folder+'u'+obs_filter+'.badpix'
     subprocess.run('uvotbadpix infile='+sk_image + ' badpixlist=CALDB' + \
                    ' outfile='+bad_pix + ' clobber=yes', shell=True)
-
     # regenerate exposure maps
     # makes two images:
     # - mask image (wcs image)
@@ -473,7 +479,6 @@ def mask_image(obs_folder, obs_filter, teldef_file):
           ' badpixfile='+bad_pix + ' method=MEANFOV attfile='+att_uat + ' teldeffile='+teldef_file + \
           ' masktrim=25 clobber=yes'
     subprocess.run(cmd, shell=True)
-
     # create an exposure map with 0 at both the bad pixels and masked areas
     with fits.open(ex_image_new) as hdu_ex, fits.open(mask_image) as hdu_mask:
 
@@ -485,7 +490,6 @@ def mask_image(obs_folder, obs_filter, teldef_file):
         # copy over the primary headers
         hdu_ex_new.append(fits.PrimaryHDU(header=hdu_ex[0].header))
         hdu_mask_new.append(fits.PrimaryHDU(header=hdu_mask[0].header))
-
         # for each image extension, make the new images
         for i in range(1,len(hdu_ex)):
 
@@ -498,7 +502,6 @@ def mask_image(obs_folder, obs_filter, teldef_file):
             # append them to the big fits files
             hdu_ex_new.append(fits.ImageHDU(data=new_ex_array, header=hdu_ex[i].header))
             hdu_mask_new.append(fits.ImageHDU(data=new_mask_array, header=hdu_mask[i].header))
-
     # write out the new fits files
     hdu_ex_new.writeto(ex_image_new, overwrite=True)
     hdu_mask_new.writeto(mask_image, overwrite=True)
@@ -662,18 +665,20 @@ def tdtl_corr(obs_date,imdata,obs_filter):
     dti = t1 - t0
     dtsec = dti.sec
     idx = np.abs(dtsec -tdtl_sens['TIME']).argmin()
-    if dtsec < tdtl_sens['TIME'][idx]:
+    if dtsec < tdtl_sens['TIME'][idx] and idx == 0:
+        idx = 0
+    elif dtsec < tdtl_sens['TIME'][idx] and idx != 0:
         idx = idx-1 
-    DT     = (dtsec - tdtl_sens['TIME'][idx])/31557600 #Years between start of interval and observation
+    DT     = dtsec/31557600 #Years between start of interval and observation
     OFFSET = tdtl_sens['OFFSET'][idx]
     SLOPE  = tdtl_sens['SLOPE'][idx]
 
     #Apply TDTL correction
-    corr_data = imdata * (1 + OFFSET) * (1 + SLOPE)**DT
+    corr_data = imdata * (1. + OFFSET) * (1. + SLOPE)**DT
 
     return corr_data
 
-def rebin(obs_data,obs_header):
+def rebin(obs_data,obs_header,ctest):
     """
     Rebin 1x1 binned data and update WCS
 
@@ -712,8 +717,21 @@ def rebin(obs_data,obs_header):
     #Rebin Data to 2x2 Bins
     for i in range(0,a0_max,2):
         for j in range(0,a1_max,2):
-            binval = obs_data[i][j+1]+obs_data[i+1][j+1]+obs_data[i][j]+obs_data[i+1][j]
+            #Add all counts
+            if ctest == 'cts':
+                binval = obs_data[i][j+1]+obs_data[i+1][j+1]+obs_data[i][j]+obs_data[i+1][j]
+            #Average the exposure maps
+            if ctest == 'exp':
+                binval = (obs_data[i][j+1]+obs_data[i+1][j+1]+obs_data[i][j]+obs_data[i+1][j])/4.
             obs_bin[int(i/2)][int(j/2)] = binval
+    #If an exposure image,zero out any bins that include edges of original image
+    if ctest == 'exp':
+        flat_obs = obs_bin.flatten()
+        values, counts = np.unique(flat_obs, return_counts = True)
+        midx = np.argmax(counts)
+        mode = values[midx]
+        idx = np.where(obs_bin != mode)
+        obs_bin[idx]=0.
 
 
     #Update Observation Header
