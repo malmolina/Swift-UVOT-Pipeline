@@ -5,13 +5,30 @@ This patch uses the `uvot_deep.py code` created by Lea Hagen (forked here). Ther
 1) Fixes minor bugs in `uvot_deep.py` (see `uvot_deep_mm.py`) as described below, and
 2) Creates a pipeline to automatically create mosaics of calibrated UVOT images for multiple objects using downloaded HEASARC data.
 
-Files needed to run Swift UVOT Pipeline Patch
+Files, software and python packages needed to run Swift UVOT Pipeline Patch
 ----------
-
+Files:
 1) `swift_uvot_pipeline.py`
 2) `uvot_deep_mm.py`
 3) `swusenscorr20041120v006.fits`
 4) `config_uvot_mosaic.py`
+
+Python packages:
+1) astropy
+2) reproject
+Note that python 3 is required
+
+Additional Software (see below for more detailed instructions):
+1) HEASARC FTOOLS
+2) HEASARC CALDB
+
+`uvot_deep_mm.py` Update (February 2024)
+----------
+This patch fixes the following bugs:
+1. Counts images were being double-counted
+2. Time-dependent throughput loss correction calculation was incorrectly indexed
+3. dead-time and time-dependent throughput loss corrections were being applied to both the exposure and counts maps
+4. Rebinning of error images were not correctly calculated
 
 `uvot_deep_mm.py` Update (September 2021)
 ----------
@@ -93,7 +110,7 @@ Similarly to convert from count rate (cr) to flux (f) using the conversion facto
 Citing the Swift UVOT Pipeline
 ----------
 
-If you use the Swift-UVOT-Pipeline, please use the reference for the most up-to-date version of the code which was presented in Molina et al. (2023) (https://arxiv.org/abs/2308.15551).
+If you use the Swift-UVOT-Pipeline, please use the reference for the most up-to-date version of the code which was presented in Molina et al. (2023) (https://ui.adsabs.harvard.edu/abs/2023ApJS..268...63M/abstract).
 
 The code was first introduced in Molina et al. (2020b) (https://ui.adsabs.harvard.edu/abs/2020ApJS..251...11M/abstract).
 
