@@ -26,9 +26,9 @@ Additional Software (see below for more detailed instructions):
 ----------
 This patch fixes the following bugs:
 1. Counts images were being double-counted
-2. Time-dependent throughput loss correction calculation was incorrectly indexed
-3. dead-time and time-dependent throughput loss corrections were being applied to both the exposure and counts maps
-4. Rebinning of error images were not correctly calculated
+2. Time-dependent throughput loss correction calculation was incorrectly indexed resulting in over-corrections
+3. Dead-time and time-dependent throughput loss corrections were being applied to both the exposure and counts maps
+4. Rebinning of 1x1-binned exposure images was not correctly calculated
 
 `uvot_deep_mm.py` Update (September 2021)
 ----------
