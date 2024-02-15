@@ -34,6 +34,11 @@ Updates:
 1) Now requires 2020 TDTL calibration file
 """
 
+"""
+VERSION 3.0      Created by: Mallory Molina    February 2024
+Updates:
+1) Fixed Bugs in uvot_deep_mm.py
+"""
 ###########################################################################################
 import os
 import glob
@@ -144,7 +149,6 @@ for i in range(0,len(obs_info['directories'])):
 	os.remove(drct+'config_uvot_mosaic.py')
 	os.remove(drct+'uvot_deep_mm.py')
 	os.remove(drct+'swusenscorr20041120v006.fits')
-
 
 
 
