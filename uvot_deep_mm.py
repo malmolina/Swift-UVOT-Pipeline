@@ -728,8 +728,13 @@ def rebin(obs_data,obs_header,ctest):
     if ctest == 'exp':
         flat_obs = obs_bin.flatten()
         values, counts = np.unique(flat_obs, return_counts = True)
-        midx = np.argmax(counts)
-        mode = values[midx]
+        max_idx = np.max(values)
+        argmax_idx = np.argmax(counts)
+        if argmax_idx == 0.0:
+            mode = max_idx
+        else:
+            midx = argmax_idx
+            mode = values[midx]
         idx = np.where(obs_bin != mode)
         obs_bin[idx]=0.
 
