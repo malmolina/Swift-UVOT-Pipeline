@@ -25,10 +25,13 @@ Additional Software (see below for more detailed instructions):
 `uvot_deep_mm.py` Update (February 2024)
 ----------
 This patch fixes the following bugs:
-1. Counts images were being double-counted
-2. Time-dependent throughput loss correction calculation was incorrectly indexed resulting in over-corrections
-3. Dead-time and time-dependent throughput loss corrections were being applied to both the exposure and counts maps
-4. Rebinning of 1x1-binned exposure images was not correctly calculated
+1) The dead-time (i.e., read-out time) correction was originally applied to both count and exposure maps. It is now only applied to exposure maps
+2) We fixed the indexing issue in the Time-Dependent Throughput Loss (TDTL) correction algorithm so that the correct offset and slope are now used in the TDTL calculation.
+3) The TDTL correction was originally applied to both the count and exposure maps. It is now only applied to the counts maps.
+4) The re-binning routine originally added all the measurements from each bin in the exposure maps, increasing the exposure time by a factor of 4 and artificially lowering the final count rate. We now take the average value for each new bin to preserve the correct exposure time.
+5) In the original data, some edge pixels for the exposure maps were set to zero. When the data were rebinned, we did not account for this, resulting in the new, larger edge pixels to have an incorrect value. We have zeroed out all larger pixels affected by this issue.
+6) The counts images were added twice during the <code>uvotimsum</code> procedure, causing an artificial inflation of the final count rate. Now all images are only added once.</li>
+
 
 `uvot_deep_mm.py` Update (September 2021)
 ----------
